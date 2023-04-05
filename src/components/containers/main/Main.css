@@ -115,10 +115,55 @@
     background: linear-gradient(0deg, #081E34, #081E34), #FFFBFE;
     border-radius: 100px;
 }
-.main_task{
+.main_task:not(:last-child){
     margin-bottom: 1rem;
 }
-.main_task-text{
+.main_input{
+    display: none;
+}
+.main_fake-inp{
+    margin-right: 0.75rem;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 1px solid rgba(218, 218, 218, 1);
+    border-radius: 4px;
+    position: relative;
+}
+.main_fake-inp::before{
+    content: "";
+    position: absolute;
+    display: block;
+    width: 16px;
+    height: 16px;
+    background-position: center center;
+    background-image: url('/public/vector.svg');
+    background-repeat: no-repeat;
+    background-color: rgba(113, 47, 255, 1);
+    border-color: rgba(113, 47, 255, 1);
+    border-radius: 4px;
+    opacity: 0;
+    transition: .2s;
+}
+.main_tasks{
+    display: flex;
+    flex-direction: column;
+}
+.main_task-done{
+    text-decoration: line-through;
+    text-decoration-color: rgba(149, 149, 149, 1);
+    color: rgba(149, 149, 149, 1);
+}
+.main_input:checked + .main_fake-inp::before{
+    opacity: 1;
+}
+.main_task{
+    display: flex;
+    align-items: center;
+}
+.main_task-label{
+    display: flex;
+    align-items: center;
     font-weight: 500;
-    margin-left: 0.5rem;
+    margin-left: 0.75rem;
 }

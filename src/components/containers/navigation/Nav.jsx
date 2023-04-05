@@ -5,7 +5,9 @@ export const weekday = ['Понедельник', 'Вторник', 'Среда'
 
 const Nav = () => {
 
-    const [activeIndex, setActiveIndex] = useState(0)
+    let dateNow = new Date(Date.now())
+    //так как отсчет (о котором я говрил в фале Main.jsx) введется с воскресенья, мы вычитаем 1
+    const [activeIndex, setActiveIndex] = useState(dateNow.getDay() - 1)
 
     return (
         <div className={'nav'}>

@@ -5,17 +5,19 @@ import {weekday} from "../navigation/Nav";
 
 const Main = () => {
 
-    const [isTaskWindowOpen, setIsTaskWindowOpen] = useState(false)
     const [tasks, setTasks] = useState([])
+    const [isTaskWindowOpen, setIsTaskWindowOpen] = useState(false)
     const [isWeekdayArrOpen, setIsWeekdayArrOpen] = useState(false)
+    const [taskId, setTaskId] = useState(0)
     const [timeStart, setTimeStart] = useState('');
     const [timeEnd, setTimeEnd] = useState('');
     const [textTask, setTextTask] = useState('')
     const [dayTask, setDayTask] = useState('')
 
-    //метод getDay() возвращзает число от 0 до 6. 0 - Воскресенье, 1 - Понедельник, 2 - Вторник и так далее
+
     useEffect(() => {
-        let dateNow = new Date(Date.now())//нынешнее время, дата, год
+        //метод getDay() возвращзает число от 0 до 6. 0 - Воскресенье, 1 - Понедельник, 2 - Вторник и так далее
+        let dateNow = new Date(Date.now())
         if (dateNow.getDay() === 0){
             setDayTask('Воскресенье')
         } else if (dateNow.getDay() === 1){
@@ -46,8 +48,22 @@ const Main = () => {
         setTimeEnd(dateString);
     }
 
+    const taskToBasket = (i) => {
+        console.log(i)
+        const res = tasks.map(task => task.id === i ? ({...task, inBasket: true}) : task)
+        setTasks(res)
+    }
+
+    const taskIsDoneChange = () => {
+        const res = tasks.map(task => (
+            { ...task, isDone: !task.isDone}
+        ))
+        setTasks(res)
+    }
+
     const addTask = () => {
         setTasks([...tasks, {
+            id: taskId,
             startTime: timeStart,
             endTime: timeEnd,
             taskText: textTask,
@@ -55,7 +71,9 @@ const Main = () => {
             isDone: false,
             inBasket: false
         }])
+        setTaskId(taskId + 1)
     }
+
     useEffect(() =>{
         console.log(tasks)
     }, [tasks])
@@ -66,9 +84,13 @@ const Main = () => {
             <div className={'main_tasks'}>
                 {
                     tasks.filter(obj => obj.tasksDay === 'Понедельник').map((task, i) => (
-                        <div className={'main_task'} key={i}>
-                            <input className={'main_input'} type={"checkbox"}/>
-                            <label className={'main_task-text'}>{task.taskText} ({task.startTime}-{task.endTime})</label>
+                        <div style={task.inBasket ? {display: "none"} : {}} key={i} className={'main_task'}>
+                            <img onClick={() => taskToBasket(i)} className={'main_points-img'} src="/points.svg" alt="points"/>
+                            <label onClick={taskIsDoneChange} className={'main_task-label'}>
+                                <input className={'main_input'} type={"checkbox"}/>
+                                <span className={'main_fake-inp'}></span>
+                                <span className={task.isDone ? 'main_task-done' : ''}>{task.taskText ? task.taskText : 'Задача'} {task.startTime && '(' + task.startTime + '-' + (task.endTime ? task.endTime : '00:00') + ')'}</span>
+                            </label>
                         </div>
                     ))
                 }
@@ -104,7 +126,7 @@ const Main = () => {
                     <button onClick={addTask} style={isWeekdayArrOpen ? {} : {marginTop: 20}} className={'btn main_add-btn'}>Добавить</button>
                 </div>
                 <div onClick={() => setIsTaskWindowOpen(!isTaskWindowOpen)} className={'main_plus-task'}>
-                    <img src="/plus.svg" alt="img"/>
+                    <img src="/plus.svg" alt="plus"/>
                 </div>
             </div>
         </div>
