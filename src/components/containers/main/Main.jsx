@@ -3,9 +3,13 @@ import './Main.css'
 import {TimePicker} from "antd";
 import {weekday} from "../navigation/Nav";
 
+
 const Main = () => {
 
-    const [tasks, setTasks] = useState([])
+    const [tasks, setTasks] = useState(() => {
+        const persistedValue = window.localStorage.getItem('tasks');
+        return persistedValue !== null ? JSON.parse(persistedValue) : [];
+    })
     const [isTaskWindowOpen, setIsTaskWindowOpen] = useState(false)
     const [isWeekdayArrOpen, setIsWeekdayArrOpen] = useState(false)
     const [taskId, setTaskId] = useState(0)
@@ -38,29 +42,31 @@ const Main = () => {
 
     const format = 'HH:mm';
 
+    //Добавляет время начала задачи
     const addStartTime = (value, dateString) => {
         console.log('Time Start', dateString);
         setTimeStart(dateString);
     }
 
+    //Добавляет время окончания задачи
     const addEndTime = (value, dateString) => {
         console.log('Time End', dateString);
         setTimeEnd(dateString);
     }
 
+    //Помещает задачу в корзину
     const taskToBasket = (i) => {
-        console.log(i)
         const res = tasks.map(task => task.id === i ? ({...task, inBasket: true}) : task)
         setTasks(res)
     }
 
-    const taskIsDoneChange = () => {
-        const res = tasks.map(task => (
-            { ...task, isDone: !task.isDone}
-        ))
+    //Помечает задачу как выполненную
+    const taskIsDoneChange = (i) => {
+        const res = tasks.map(task => task.id === i ? ({ ...task, isDone: true}) : task)
         setTasks(res)
     }
 
+    //Добавляет задачу в список
     const addTask = () => {
         setTasks([...tasks, {
             id: taskId,
@@ -74,10 +80,12 @@ const Main = () => {
         setTaskId(taskId + 1)
     }
 
+
+    //Выводит в консоль список задач (для удобства)
     useEffect(() =>{
         console.log(tasks)
+        window.localStorage.setItem('tasks', JSON.stringify(tasks))
     }, [tasks])
-
 
     return (
         <div className={'main'}>
@@ -86,7 +94,7 @@ const Main = () => {
                     tasks.filter(obj => obj.tasksDay === 'Понедельник').map((task, i) => (
                         <div style={task.inBasket ? {display: "none"} : {}} key={i} className={'main_task'}>
                             <img onClick={() => taskToBasket(i)} className={'main_points-img'} src="/points.svg" alt="points"/>
-                            <label onClick={taskIsDoneChange} className={'main_task-label'}>
+                            <label onClick={() => taskIsDoneChange(i)} className={'main_task-label'}>
                                 <input className={'main_input'} type={"checkbox"}/>
                                 <span className={'main_fake-inp'}></span>
                                 <span className={task.isDone ? 'main_task-done' : ''}>{task.taskText ? task.taskText : 'Задача'} {task.startTime && '(' + task.startTime + '-' + (task.endTime ? task.endTime : '00:00') + ')'}</span>
