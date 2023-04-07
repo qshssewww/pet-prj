@@ -6,10 +6,7 @@ import {weekday} from "../navigation/Nav";
 
 const Main = () => {
 
-    const [tasks, setTasks] = useState(() => {
-        const persistedValue = window.localStorage.getItem('tasks');
-        return persistedValue !== null ? JSON.parse(persistedValue) : [];
-    })
+    const [tasks, setTasks] = useState([])
     const [isTaskWindowOpen, setIsTaskWindowOpen] = useState(false)
     const [isWeekdayArrOpen, setIsWeekdayArrOpen] = useState(false)
     const [taskId, setTaskId] = useState(0)
@@ -18,6 +15,11 @@ const Main = () => {
     const [textTask, setTextTask] = useState('')
     const [dayTask, setDayTask] = useState('')
 
+    useEffect(() => {
+        const persistedValue = JSON.parse(window.localStorage.getItem('tasks'));
+        setTasks(persistedValue?.length ? (persistedValue) : [])
+        setTaskId(Number(window.localStorage.getItem('id')))
+    }, [])
 
     useEffect(() => {
         //метод getDay() возвращзает число от 0 до 6. 0 - Воскресенье, 1 - Понедельник, 2 - Вторник и так далее
@@ -25,7 +27,7 @@ const Main = () => {
         if (dateNow.getDay() === 0){
             setDayTask('Воскресенье')
         } else if (dateNow.getDay() === 1){
-            setDayTask('Понедельник')
+            setDayTask('Понеде льник')
         } else if (dateNow.getDay() === 2){
             setDayTask('Вторник')
         } else if (dateNow.getDay() === 3){
@@ -55,17 +57,23 @@ const Main = () => {
     }
 
     //Помещает задачу в корзину
-    const taskToBasket = (i) => {
-        const res = tasks.map(task => task.id === i ? ({...task, inBasket: true}) : task)
-        setTasks(res)
+    const taskToBasket = (task) => {
+        setTasks(tasks.map(item => {
+            if (item.id === task.id){
+                task.inBasket = true
+            }
+            return item
+        }))
     }
-
     //Помечает задачу как выполненную
-    const taskIsDoneChange = (i) => {
-        const res = tasks.map(task => task.id === i ? ({ ...task, isDone: true}) : task)
-        setTasks(res)
+    const taskIsDoneChange = (task) => {
+        setTasks(tasks.map(item => {
+            if (item.id === task.id){
+                task.isDone = !task.isDone
+            }
+            return item
+        }))
     }
-
     //Добавляет задачу в список
     const addTask = () => {
         setTasks([...tasks, {
@@ -80,25 +88,28 @@ const Main = () => {
         setTaskId(taskId + 1)
     }
 
-
     //Выводит в консоль список задач (для удобства)
     useEffect(() =>{
         console.log(tasks)
         window.localStorage.setItem('tasks', JSON.stringify(tasks))
     }, [tasks])
 
+    useEffect(() =>{
+        window.localStorage.setItem('id', JSON.stringify(taskId))
+    }, [taskId])
+
     return (
         <div className={'main'}>
             <div className={'main_tasks'}>
                 {
-                    tasks.filter(obj => obj.tasksDay === 'Понедельник').map((task, i) => (
+                    tasks.map((task, i) => (
                         <div style={task.inBasket ? {display: "none"} : {}} key={i} className={'main_task'}>
-                            <img onClick={() => taskToBasket(i)} className={'main_points-img'} src="/points.svg" alt="points"/>
-                            <label onClick={() => taskIsDoneChange(i)} className={'main_task-label'}>
-                                <input className={'main_input'} type={"checkbox"}/>
-                                <span className={'main_fake-inp'}></span>
-                                <span className={task.isDone ? 'main_task-done' : ''}>{task.taskText ? task.taskText : 'Задача'} {task.startTime && '(' + task.startTime + '-' + (task.endTime ? task.endTime : '00:00') + ')'}</span>
-                            </label>
+                            <img onClick={() => taskToBasket(task)} className={'main_points-img'} src="/points.svg" alt="points"/>
+                                <label className={'main_task-label'}>
+                                    <input checked={task.isDone} className={'main_input'} type={"checkbox"}/>
+                                    <span onClick={() => taskIsDoneChange(task)} className={'main_fake-inp'}></span>
+                                    <span onClick={() => taskIsDoneChange(task)} className={task.isDone ? 'main_task-done' : ''}>{task.taskText ? task.taskText : 'Задача'} {task.startTime && '(' + task.startTime + '-' + (task.endTime ? task.endTime : '00:00') + ')'}</span>
+                                </label>
                         </div>
                     ))
                 }

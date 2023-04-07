@@ -7,7 +7,8 @@ const Nav = () => {
 
     let dateNow = new Date(Date.now())
     //так как отсчет (о котором я говрил в фале Main.jsx) введется с воскресенья, мы вычитаем 1
-    const [activeIndex, setActiveIndex] = useState(dateNow.getDay() - 1)
+    const [activeIndex, setActiveIndex] = useState(dateNow.getDay())
+    window.sessionStorage.setItem('weekday', activeIndex)
 
     return (
         <div className={'nav'}>
