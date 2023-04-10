@@ -53,10 +53,14 @@ body{
     html{
         font-size: 12px;
     }
-    .btn{
-        padding: 12px 17px;
-    }
 }
 @media screen and (max-width: 946px){
-
+    html{
+        font-size: 10px;
+    }
+}
+@media screen and (max-width: 688px){
+    body{
+        padding: 4rem 2rem 0 2rem;
+    }
 }

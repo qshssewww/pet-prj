@@ -14,7 +14,15 @@
     font-weight: 500;
     border-radius: 10px;
 }
+@media screen and (max-width: 1261px){
+    .nav_btn{
+        padding: 12px 15px;
+    }
+}
 @media screen and (max-width: 946px){
+    .nav_title{
+        text-align: center;
+    }
     .nav_main-block{
         flex-wrap: wrap;
     }
@@ -22,6 +30,6 @@
         margin-right: 6px;
     }
     .nav_btn:last-child{
-        margin-top: 16px;
+        margin: 10px 0;
     }
 }

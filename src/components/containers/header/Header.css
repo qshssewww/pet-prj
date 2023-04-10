@@ -18,7 +18,7 @@
     font-size: 34px;
 }
 .header_subtitle{
-    line-height: 1.375rem;
+    line-height: 21px;
     font-weight: 500;
 }
 .header_quote-block{
@@ -53,9 +53,6 @@
     .header_quote{
         font-size: 17px;
     }
-}
-@media screen and (max-width: 946px){
-
 }
 @media screen and (max-width: 688px){
     .header_page-btns{

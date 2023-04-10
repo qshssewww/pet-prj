@@ -5,8 +5,6 @@ export const weekday = ['Понедельник', 'Вторник', 'Среда'
 
 const Nav = ({activeIndex, setActiveIndex}) => {
 
-
-
     //изменяет/записывает значение в хранилище сессии
     useEffect(() => {
         window.sessionStorage.setItem('weekday', activeIndex)
