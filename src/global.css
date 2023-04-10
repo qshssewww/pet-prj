@@ -11,6 +11,10 @@ blockquote,q{quotes:none}
 blockquote:before,blockquote:after,q:before,q:after{content:none}
 table{border-collapse:collapse;border-spacing:0}
 /*----------------------mainStyles-----------------------------*/
+html{
+    font-size: 16px;
+}
+
 #root{
     display: flex;
     align-items: center;
@@ -18,7 +22,7 @@ table{border-collapse:collapse;border-spacing:0}
     width: 100%;
 }
 body{
-    padding: 5rem 5rem 0 5rem;
+    padding: 5rem 4rem 0 4rem;
     font-family: Inter, serif;
     font-weight: 400;
 }
@@ -45,4 +49,14 @@ body{
     color: white;
     background: rgba(8, 30, 52, 0.42);
 }
+@media screen and (max-width: 1261px){
+    html{
+        font-size: 12px;
+    }
+    .btn{
+        padding: 12px 17px;
+    }
+}
+@media screen and (max-width: 946px){
 
+}

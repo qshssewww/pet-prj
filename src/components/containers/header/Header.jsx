@@ -28,7 +28,7 @@ const Header = () => {
             <div className={'header_main-block'}>
                 <div className={'header_title-block'}>
                     <h1 className={'header_title'}>Простой список дел</h1>
-                    <p className={'header_subtitle'}>Сегодня потрясающий день. Погода замечательная, вы тоже замечательные!</p>
+                    <p className={'header_subtitle'}>Сегодня потрясающий день. Погода замечательная, вы тоже замечательны!</p>
                 </div>
                 <div className={'header_quote-block'}>
                     <p className={'header_quote'}>{quotes[res].text}</p>

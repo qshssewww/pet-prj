@@ -43,3 +43,35 @@
 .header_btn:not(:last-child){
     margin-right: 1rem;
 }
+@media screen and (max-width: 1261px){
+    .header_title{
+        font-size: 29px;
+    }
+    .header_subtitle{
+        font-size: 15px;
+    }
+    .header_quote{
+        font-size: 17px;
+    }
+}
+@media screen and (max-width: 946px){
+
+}
+@media screen and (max-width: 688px){
+    .header_page-btns{
+        justify-content: space-between;
+    }
+    .header_main-block{
+        align-items: center;
+        flex-direction: column;
+    }
+    .header_title-block{
+        text-align: center;
+    }
+    .header_quote-block{
+        display: none;
+    }
+    .header_subtitle{
+        font-size: 16px;
+    }
+}

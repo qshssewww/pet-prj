@@ -1,14 +1,16 @@
-import React, {useState} from 'react';
+import React, {useEffect} from 'react';
 import './Nav.css'
 
 export const weekday = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье']
 
-const Nav = () => {
+const Nav = ({activeIndex, setActiveIndex}) => {
 
-    let dateNow = new Date(Date.now())
-    //так как отсчет (о котором я говрил в фале Main.jsx) введется с воскресенья, мы вычитаем 1
-    const [activeIndex, setActiveIndex] = useState(dateNow.getDay())
-    window.sessionStorage.setItem('weekday', activeIndex)
+
+
+    //изменяет/записывает значение в хранилище сессии
+    useEffect(() => {
+        window.sessionStorage.setItem('weekday', activeIndex)
+    }, [activeIndex])
 
     return (
         <div className={'nav'}>

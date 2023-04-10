@@ -1,0 +1,27 @@
+.nav_title{
+    font-weight: 700;
+    font-size: 24px;
+}
+.nav_main-block{
+    border-bottom: 1px solid rgba(21, 21, 23, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 1.5625rem 0;
+}
+.nav_btn{
+    min-width: 9.75rem;
+    font-weight: 500;
+    border-radius: 10px;
+}
+@media screen and (max-width: 946px){
+    .nav_main-block{
+        flex-wrap: wrap;
+    }
+    .nav_btn:not(:last-child){
+        margin-right: 6px;
+    }
+    .nav_btn:last-child{
+        margin-top: 16px;
+    }
+}
