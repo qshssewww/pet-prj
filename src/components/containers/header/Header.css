@@ -75,8 +75,12 @@
 @media screen and (max-width: 460px){
     .header_page-btns {
         flex-wrap: wrap;
+        align-items: center;
     }
     .header_btn:last-child{
         margin: 10px 0;
+    }
+    .header_btn{
+        max-height: 40px;
     }
 }
