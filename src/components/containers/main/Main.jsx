@@ -125,6 +125,9 @@ const Main = () => {
                     }
                 </div>
                 <div className={'main_add-task'}>
+                    <div onClick={() => setIsTaskWindowOpen(!isTaskWindowOpen)} className={'main_plus-task-none main_plus-task'}>
+                        <img src="/plus.svg" alt="plus"/>
+                    </div>
                     <div style={isTaskWindowOpen ? {} : {display: "none"}} className={'main_task-window'}>
                         <h4 className={'main_window-title'}>Добавить новую задачу</h4>
                         <textarea value={textTask} onChange={e => setTextTask(e.target.value)} placeholder={'Введите текст...'} className={'main_textarea'}></textarea>
@@ -145,7 +148,7 @@ const Main = () => {
                                 </div>
                                 <div style={isWeekdayArrOpen ? {} : {display: "none"}} className={'main_weekday-arr'}>
                                     {
-                                        weekday.map((day, i) => (
+                                        weekday.filter(day => day !== dayTask).map((day, i) => (
                                             <p onClick={() => {
                                                 setDayTask(day)
                                                 setDayTaskNum(i)

@@ -8,6 +8,7 @@
 }
 .main_add-task{
     display: flex;
+    justify-content: end;
 }
 .main_plus-task{
     cursor: pointer;
@@ -22,6 +23,7 @@
 .main_window-title{
     font-weight: 700;
     margin-bottom: 0.8rem;
+    font-size: 16px;
 }
 .main_task-window{
     position: relative;
@@ -108,7 +110,7 @@
     border: none;
 }
 .main_add-btn{
-    margin-top: 9.9rem;
+    margin-top: 130px;
     font-weight: 700;
     color: white;
     max-width: 50%;
@@ -118,8 +120,11 @@
 .main_task:not(:last-child){
     margin-bottom: 1rem;
 }
-.main_input{
+.main_input, .main_plus-task-none{
     display: none;
+}
+.main_plus-task-none{
+    margin-bottom: 20px;
 }
 .main_fake-inp{
     margin-right: 0.75rem;
@@ -158,6 +163,7 @@
     opacity: 1;
 }
 .main_task{
+    font-size: 14px;
     display: flex;
     align-items: center;
 }
@@ -166,4 +172,32 @@
     align-items: center;
     font-weight: 500;
     margin-left: 0.75rem;
+}
+@media screen and (max-width: 946px){
+    .main{
+        flex-direction: column;
+    }
+    .main_tasks{
+        margin-bottom: 100px;
+    }
+}
+@media screen and (max-width: 460px) {
+    .main_add-task{
+        flex-direction: column;
+        align-items: end;
+    }
+    .main_plus-task-none{
+        display: flex!important;
+    }
+    .main_plus-task{
+        display: none;
+    }
+    .main_task-window{
+        max-width: 280px;
+        margin: 0;
+        padding: 12px;
+    }
+    .main_arrow-down{
+        right: 16px;
+    }
 }
