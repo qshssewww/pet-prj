@@ -41,4 +41,7 @@
     .nav_btn:last-child{
         margin: 0;
     }
+    .nav_btn{
+        min-width: 114px;
+    }
 }

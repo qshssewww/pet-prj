@@ -77,6 +77,6 @@
         flex-wrap: wrap;
     }
     .header_btn:last-child{
-        margin: 10px;
+        margin: 10px 0;
     }
 }
