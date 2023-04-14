@@ -42,6 +42,14 @@
         margin: 0;
     }
     .nav_btn{
-        min-width: 114px;
+        width: 115px;
+    }
+}
+@media screen and (max-width: 377px){
+    .nav_btn:nth-child(3n) {
+        margin-top: 10px;
+    }
+    .nav_btn:nth-child(4n) {
+        margin-top: 10px;
     }
 }

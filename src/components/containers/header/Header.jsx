@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import './Header.css'
 
 const tabs = ['Выполнить', 'Выполнено', 'Корзина']
@@ -13,9 +13,7 @@ const quotes = [
     {text: '«Цели никогда не должны быть простыми. Они должны быть неудобными, чтобы заставить вас работать.»', author: 'Майкл Фелпс'},
     {text: '«Чтение — это то же самое для ума, что и упражнение для тела.»', author: 'Брайан Трейси'},
 ]
-const Header = () => {
-
-    const [activeIndex, setActiveIndex] = useState(0)
+const Header = ({activeIndex, setActiveIndex}) => {
 
     function getRandomIntInclusive(min, max) {
         min = Math.ceil(min);

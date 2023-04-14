@@ -39,12 +39,12 @@
     padding: 4px 10px;
     position: absolute;
     right: 20px;
-    bottom: 16px;
+    bottom: 6px;
     border-radius: 10px;
 }
 .main_arrow-down{
     position: absolute;
-    right: 25px;
+    right: 23px;
     width: 18px;
     height: 9px;
     margin-top: 3px;
@@ -106,21 +106,19 @@
     align-items: center;
 }
 .main_slider-p{
+    min-width: 140px;
     width: 100%;
     border: none;
 }
 .main_add-btn{
-    margin-top: 130px;
+    margin-top: 145px;
     font-weight: 700;
-    color: white;
+    color: white !important;
     max-width: 50%;
-    background: linear-gradient(0deg, #081E34, #081E34), #FFFBFE;
+    background: linear-gradient(0deg, #081E34, #081E34), #FFFBFE !important;
     border-radius: 100px;
 }
-.main_task:not(:last-child){
-    margin-bottom: 1rem;
-}
-.main_input, .main_plus-task-none{
+.main_input, .main_plus-task-none, .main_do-block-none{
     display: none;
 }
 .main_plus-task-none{
@@ -163,9 +161,17 @@
     opacity: 1;
 }
 .main_task{
+    position: relative;
     font-size: 14px;
+    margin-bottom: 20px;
     display: flex;
     align-items: center;
+}
+.main_task:last-child{
+    margin-bottom: 80px;
+}
+.main_task-m{
+    margin-bottom: 75px;
 }
 .main_task-label{
     display: flex;
@@ -173,12 +179,36 @@
     font-weight: 500;
     margin-left: 0.75rem;
 }
+.main_do-block{
+    z-index: 2;
+    top: 20px;
+    position: absolute;
+    display: block;
+    padding: 9px 9px 9px 5px;
+    background-color: #D9D9D9;
+    border-radius: 13px;
+}
+.main_delete-block, .main_change-block{
+    display: flex;
+    align-items: center;
+}
+.main_change-block{
+    margin-top: 10px;
+}
+.main_delete-text, .main_change-text{
+    white-space: nowrap;
+    margin-left: 10px;
+    font-weight: 500;
+}
 @media screen and (max-width: 946px){
     .main{
         flex-direction: column;
     }
     .main_tasks{
         margin-bottom: 60px;
+    }
+    .main_arrow-down{
+        right: 23px;
     }
 }
 @media screen and (max-width: 460px) {
@@ -198,6 +228,12 @@
         padding: 12px;
     }
     .main_arrow-down{
-        right: 16px;
+        right: 17px;
+    }
+    .main_weekday-arr{
+        bottom: 12px;
+    }
+    .main_add-btn{
+        margin-top: 155px;
     }
 }

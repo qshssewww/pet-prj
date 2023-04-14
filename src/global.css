@@ -14,7 +14,9 @@ table{border-collapse:collapse;border-spacing:0}
 html{
     font-size: 16px;
 }
-
+.index{
+    width: 100%;
+}
 #root{
     display: flex;
     align-items: center;

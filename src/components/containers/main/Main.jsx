@@ -4,10 +4,12 @@ import {TimePicker} from "antd";
 import Nav, {weekday} from "./components/navigation/Nav";
 
 
-const Main = () => {
+const Main = ({activeIndex}) => {
 
     let dateNow = new Date(Date.now())
     const [tasks, setTasks] = useState([])
+    const [doBlockOpen, setDoBlockOpen] = useState(-1)
+    const [changeTask, setChangeTask] = useState('')
     const [isTaskWindowOpen, setIsTaskWindowOpen] = useState(false)
     const [isWeekdayArrOpen, setIsWeekdayArrOpen] = useState(false)
     const [taskId, setTaskId] = useState(0)
@@ -15,9 +17,9 @@ const Main = () => {
     const [timeEnd, setTimeEnd] = useState('');
     const [textTask, setTextTask] = useState('')
     const [dayTask, setDayTask] = useState('')
-    const [dayTaskNum, setDayTaskNum] = useState(0)
+    const [dayTaskNum, setDayTaskNum] = useState(dateNow.getDay() - 1)
     //так как отсчет (о котором я говрил в фале Main.jsx) введется с воскресенья, мы вычитаем 1
-    const [activeIndex, setActiveIndex] = useState(dateNow.getDay() - 1)
+    const [activeIndexN, setActiveIndexN] = useState(dateNow.getDay() - 1)
 
     useEffect(() => {
         const persistedValue = JSON.parse(window.localStorage.getItem('tasks'));
@@ -70,6 +72,22 @@ const Main = () => {
         }))
     }
 
+    //Дает вотзможность изменить задачу
+    const taskChange = (task) => {
+        setIsTaskWindowOpen(true)
+        setTasks(tasks.map(item => {
+            if (item.id === task.id){
+                task.startTime = timeStart
+                task.endTime = timeEnd
+                task.taskText = textTask
+                task.taskDay = dayTask
+                task.taskDayNum = dayTaskNum
+            }
+            return item
+        }))
+        setChangeTask('')
+    }
+
     //Помечает задачу как выполненную
     const taskIsDoneChange = (task) => {
         setTasks(tasks.map(item => {
@@ -95,6 +113,32 @@ const Main = () => {
         setTaskId(taskId + 1)
     }
 
+    //открывает/закрыват окно действий (добавить в корзину или изменить)
+    const openDeleteBlock = (i) => {
+        tasks.map(task => {
+            if (task.id === i){
+                if(doBlockOpen === task.id || doBlockOpen === -1){
+                    if (document.getElementById(i).classList.length === 1){
+                        setDoBlockOpen(task.id)
+                        document.getElementById(i).classList.add('main_do-block')
+                        document.querySelector(`.main_task${task.id}`).classList.add('main_task-m')
+                    } else {
+                        setDoBlockOpen(-1)
+                        document.getElementById(i).classList.remove('main_do-block')
+                        document.querySelector(`.main_task${task.id}`).classList.remove('main_task-m')
+                    }
+                } else {
+                    document.querySelector('.main_do-block')?.classList.remove('main_do-block')
+                    document.querySelector('.main_task-m').classList.remove('main_task-m')
+                    setDoBlockOpen(task.id)
+                    document.getElementById(i).classList.add('main_do-block')
+                    document.querySelector(`.main_task${task.id}`).classList.add('main_task-m')
+                }
+            }
+            return task
+        })
+    }
+
     useEffect(() =>{
         //Выводит в консоль список задач (для удобства)
         console.log(tasks)
@@ -102,26 +146,95 @@ const Main = () => {
         window.localStorage.setItem('tasks', JSON.stringify(tasks))
     }, [tasks])
 
+    useEffect(() => {
+        if(!isTaskWindowOpen){
+            setChangeTask('')
+        }
+    }, [isTaskWindowOpen])
+
     useEffect(() =>{
         window.localStorage.setItem('id', JSON.stringify(taskId))
     }, [taskId])
 
     return (
         <>
-            <Nav activeIndex={activeIndex} setActiveIndex={setActiveIndex}/>
+            <Nav activeIndexN={activeIndexN} setActiveIndexN={setActiveIndexN}/>
             <div className={'main'}>
                 <div className={'main_tasks'}>
                     {
-                        tasks.filter(task => task.taskDayNum === activeIndex).map((task, i) => (
-                            <div style={task.inBasket ? {display: "none"} : {}} key={i} className={'main_task'}>
-                                <img onClick={() => taskToBasket(task)} className={'main_points-img'} src="/points.svg" alt="points"/>
+                        activeIndex === 0 ?
+                        tasks.filter(task => task.taskDayNum === activeIndexN).map((task, i) => (
+                            <div style={task.inBasket ? {display: "none"} : {}} key={i} className={`main_task main_task${i}`}>
+                                <img onClick={() => openDeleteBlock(i)} className={'main_points-img'} src="/points.svg" alt="points"/>
                                 <label className={'main_task-label'}>
                                     <input checked={task.isDone} onChange={() => 1} className={'main_input'} type={"checkbox"}/>
                                     <span onClick={() => taskIsDoneChange(task)} className={'main_fake-inp'}></span>
-                                    <span onClick={() => taskIsDoneChange(task)} className={task.isDone ? 'main_task-done' : ''}>{task.taskText ? task.taskText : 'Задача'} {task.startTime && '(' + task.startTime + '-' + (task.endTime ? task.endTime : '00:00') + ')'}</span>
+                                    <span style={{fontSize: 16}} onClick={() => taskIsDoneChange(task)} className={task.isDone ? 'main_task-done' : ''}>{task.taskText ? task.taskText : 'Задача'} {task.startTime && '(' + task.startTime + (task.endTime ? '-' + task.endTime : '') + ')'}</span>
                                 </label>
+                                <div id={i} className={'main_do-block-none'}>
+                                    <div onClick={() => taskToBasket(task)} className={'main_delete-block'}>
+                                        <img src="/deleteIcon.svg" alt="deleteIcon"/>
+                                        <p className={'main_delete-text'}>Переместить в корзину</p>
+                                    </div>
+                                    <div onClick={() => {
+                                        setChangeTask(task)
+                                        setIsTaskWindowOpen(true)
+                                    }} className={'main_change-block'}>
+                                        <img src="/changeIcon.svg" alt="changeIcon"/>
+                                        <p className={'main_change-text'}>Изменить</p>
+                                    </div>
+                                </div>
                             </div>
                         ))
+                            : activeIndex === 1 ?
+                                tasks.filter(task => task.taskDayNum === activeIndexN && task.isDone).map((task, i) => (
+                                    <div style={task.inBasket ? {display: "none"} : {}} key={i} className={`main_task main_task${i}`}>
+                                        <img onClick={() => openDeleteBlock(i)} className={'main_points-img'} src="/points.svg" alt="points"/>
+                                        <label className={'main_task-label'}>
+                                            <input checked={task.isDone} onChange={() => 1} className={'main_input'} type={"checkbox"}/>
+                                            <span onClick={() => taskIsDoneChange(task)} className={'main_fake-inp'}></span>
+                                            <span style={{fontSize: 16}} onClick={() => taskIsDoneChange(task)} className={task.isDone ? 'main_task-done' : ''}>{task.taskText ? task.taskText : 'Задача'} {task.startTime && '(' + task.startTime + (task.endTime ? '-' + task.endTime : '') + ')'}</span>
+                                        </label>
+                                        <div id={i} className={'main_do-block-none'}>
+                                            <div onClick={() => taskToBasket(task)} className={'main_delete-block'}>
+                                                <img src="/deleteIcon.svg" alt="deleteIcon"/>
+                                                <p className={'main_delete-text'}>Переместить в корзину</p>
+                                            </div>
+                                            <div onClick={() => {
+                                                setChangeTask(task)
+                                                setIsTaskWindowOpen(true)
+                                            }} className={'main_change-block'}>
+                                                <img src="/changeIcon.svg" alt="changeIcon"/>
+                                                <p className={'main_change-text'}>Изменить</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))
+                            : activeIndex === 2 ?
+                                tasks.filter(task => task.taskDayNum === activeIndexN && task.inBasket).map((task, i) => (
+                                    <div key={i} className={`main_task main_task${i}`}>
+                                        <img onClick={() => openDeleteBlock(i)} className={'main_points-img'} src="/points.svg" alt="points"/>
+                                        <label className={'main_task-label'}>
+                                            <input checked={task.isDone} onChange={() => 1} className={'main_input'} type={"checkbox"}/>
+                                            <span onClick={() => taskIsDoneChange(task)} className={'main_fake-inp'}></span>
+                                            <span style={{fontSize: 16}} onClick={() => taskIsDoneChange(task)} className={task.isDone ? 'main_task-done' : ''}>{task.taskText ? task.taskText : 'Задача'} {task.startTime && '(' + task.startTime + (task.endTime ? '-' + task.endTime : '') + ')'}</span>
+                                        </label>
+                                        <div id={i} className={'main_do-block-none'}>
+                                            <div onClick={() => taskToBasket(task)} className={'main_delete-block'}>
+                                                <img src="/deleteIcon.svg" alt="deleteIcon"/>
+                                                <p className={'main_delete-text'}>Переместить в корзину</p>
+                                            </div>
+                                            <div onClick={() => {
+                                                setChangeTask(task)
+                                                setIsTaskWindowOpen(true)
+                                            }} className={'main_change-block'}>
+                                                <img src="/changeIcon.svg" alt="changeIcon"/>
+                                                <p className={'main_change-text'}>Изменить</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))
+                                : ''
                     }
                 </div>
                 <div className={'main_add-task'}>
@@ -148,7 +261,7 @@ const Main = () => {
                                 </div>
                                 <div style={isWeekdayArrOpen ? {} : {display: "none"}} className={'main_weekday-arr'}>
                                     {
-                                        weekday.filter(day => day !== dayTask).map((day, i) => (
+                                        weekday.map((day, i) => (
                                             <p onClick={() => {
                                                 setDayTask(day)
                                                 setDayTaskNum(i)
@@ -158,7 +271,12 @@ const Main = () => {
                                 </div>
                             </div>
                         </div>
-                        <button onClick={addTask} style={isWeekdayArrOpen ? {} : {marginTop: 20}} className={'btn main_add-btn'}>Добавить</button>
+                        {
+                            changeTask ?
+                                <button onClick={() => taskChange(changeTask)} style={isWeekdayArrOpen ? {} : {marginTop: 20}} className={'main_add-btn btn'}>Изменить</button>
+                                :
+                                <button onClick={addTask} style={isWeekdayArrOpen ? {} : {marginTop: 20}} className={'main_add-btn btn'}>Добавить</button>
+                        }
                     </div>
                     <div onClick={() => setIsTaskWindowOpen(!isTaskWindowOpen)} className={'main_plus-task'}>
                         <img src="/plus.svg" alt="plus"/>

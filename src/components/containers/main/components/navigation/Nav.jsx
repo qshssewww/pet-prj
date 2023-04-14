@@ -3,12 +3,12 @@ import './Nav.css'
 
 export const weekday = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье']
 
-const Nav = ({activeIndex, setActiveIndex}) => {
+const Nav = ({activeIndexN, setActiveIndexN}) => {
 
     //изменяет/записывает значение в хранилище сессии
     useEffect(() => {
-        window.sessionStorage.setItem('weekday', activeIndex)
-    }, [activeIndex])
+        window.sessionStorage.setItem('weekday', activeIndexN)
+    }, [activeIndexN])
 
     return (
         <div className={'nav'}>
@@ -17,7 +17,7 @@ const Nav = ({activeIndex, setActiveIndex}) => {
                 {
                     //расскрываем массив weekday
                     weekday.map((day, i) => (
-                        <button onClick={() => setActiveIndex(i)} key={i} className={activeIndex === i ? 'btn nav_btn active' : 'btn nav_btn'}>{day}</button>
+                        <button onClick={() => setActiveIndexN(i)} key={i} className={activeIndexN === i ? 'btn nav_btn active' : 'btn nav_btn'}>{day}</button>
                     ))
                 }
             </nav>
