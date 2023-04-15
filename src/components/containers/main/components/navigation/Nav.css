@@ -36,7 +36,7 @@
 }
 @media screen and (max-width: 460px){
     .nav_btn:nth-child(5n){
-        margin: 10px 0;
+        margin: 10px 3px 10px 0;
     }
     .nav_btn:last-child{
         margin: 0;
