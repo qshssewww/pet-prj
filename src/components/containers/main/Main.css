@@ -3,9 +3,6 @@
     display: flex;
     justify-content: space-between;
 }
-.ant-picker{
-    border: none;
-}
 .main_add-task{
     display: flex;
     justify-content: end;
@@ -203,9 +200,6 @@
 @media screen and (max-width: 946px){
     .main{
         flex-direction: column;
-    }
-    .main_tasks{
-        margin-bottom: 60px;
     }
     .main_arrow-down{
         right: 23px;

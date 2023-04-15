@@ -21,6 +21,7 @@ const Header = ({activeIndex, setActiveIndex}) => {
         return Math.floor(Math.random() * (max - min + 1)) + min; //Максимум и минимум включаются
     }
     const res = getRandomIntInclusive(0,8)
+
     return (
         <header className={'header'}>
             <div className={'header_main-block'}>

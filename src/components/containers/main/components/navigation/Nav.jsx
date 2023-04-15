@@ -1,14 +1,9 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import './Nav.css'
 
 export const weekday = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье']
 
 const Nav = ({activeIndexN, setActiveIndexN}) => {
-
-    //изменяет/записывает значение в хранилище сессии
-    useEffect(() => {
-        window.sessionStorage.setItem('weekday', activeIndexN)
-    }, [activeIndexN])
 
     return (
         <div className={'nav'}>

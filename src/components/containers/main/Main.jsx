@@ -24,7 +24,7 @@ const Main = ({activeIndex}) => {
     useEffect(() => {
         const persistedValue = JSON.parse(window.localStorage.getItem('tasks'));
         setTasks(persistedValue?.length ? (persistedValue) : [])
-        setTaskId(Number(window.localStorage.getItem('id')))
+        setTaskId(tasks.length !== 0 ? Number(window.localStorage.getItem('id')) : 0)
     }, [])
 
     useEffect(() => {
@@ -98,6 +98,21 @@ const Main = ({activeIndex}) => {
         }))
     }
 
+    //Возвращает задачу из корзины к списку дел
+    const taskOutBasket = (task) => {
+        setTasks(tasks.map(item => {
+            if (item.id === task.id){
+                task.inBasket = false
+            }
+            return item
+        }))
+    }
+
+    //Полностью удалает задачу
+    const taskDeleteForever = (task) => {
+        setTasks(tasks.filter((item) => task.id !== item.id))
+    }
+
     //Добавляет задачу в список
     const addTask = () => {
         setTasks([...tasks, {
@@ -114,29 +129,24 @@ const Main = ({activeIndex}) => {
     }
 
     //открывает/закрыват окно действий (добавить в корзину или изменить)
-    const openDeleteBlock = (i) => {
-        tasks.map(task => {
-            if (task.id === i){
-                if(doBlockOpen === task.id || doBlockOpen === -1){
-                    if (document.getElementById(i).classList.length === 1){
+    const openDeleteBlock = (task) => {
+        if(doBlockOpen === task.id || doBlockOpen === -1){
+                    if (document.getElementById(task.id).classList.length === 1){
                         setDoBlockOpen(task.id)
-                        document.getElementById(i).classList.add('main_do-block')
+                        document.getElementById(task.id).classList.add('main_do-block')
                         document.querySelector(`.main_task${task.id}`).classList.add('main_task-m')
                     } else {
                         setDoBlockOpen(-1)
-                        document.getElementById(i).classList.remove('main_do-block')
+                        document.getElementById(task.id).classList.remove('main_do-block')
                         document.querySelector(`.main_task${task.id}`).classList.remove('main_task-m')
                     }
                 } else {
                     document.querySelector('.main_do-block')?.classList.remove('main_do-block')
-                    document.querySelector('.main_task-m').classList.remove('main_task-m')
+                    document.querySelector('.main_task-m')?.classList.remove('main_task-m')
                     setDoBlockOpen(task.id)
-                    document.getElementById(i).classList.add('main_do-block')
+                    document.getElementById(task.id).classList.add('main_do-block')
                     document.querySelector(`.main_task${task.id}`).classList.add('main_task-m')
                 }
-            }
-            return task
-        })
     }
 
     useEffect(() =>{
@@ -163,22 +173,25 @@ const Main = ({activeIndex}) => {
                 <div className={'main_tasks'}>
                     {
                         activeIndex === 0 ?
-                        tasks.filter(task => task.taskDayNum === activeIndexN).map((task, i) => (
-                            <div style={task.inBasket ? {display: "none"} : {}} key={i} className={`main_task main_task${i}`}>
-                                <img onClick={() => openDeleteBlock(i)} className={'main_points-img'} src="/points.svg" alt="points"/>
+                        tasks.filter(task => task.taskDayNum === activeIndexN).map((task) => (
+                            <div style={task.inBasket ? {display: "none"} : {}} key={task.id} className={`main_task main_task${task.id}`}>
+                                <img onClick={() => openDeleteBlock(task)} className={'main_points-img'} src="/points.svg" alt="points"/>
                                 <label className={'main_task-label'}>
                                     <input checked={task.isDone} onChange={() => 1} className={'main_input'} type={"checkbox"}/>
                                     <span onClick={() => taskIsDoneChange(task)} className={'main_fake-inp'}></span>
                                     <span style={{fontSize: 16}} onClick={() => taskIsDoneChange(task)} className={task.isDone ? 'main_task-done' : ''}>{task.taskText ? task.taskText : 'Задача'} {task.startTime && '(' + task.startTime + (task.endTime ? '-' + task.endTime : '') + ')'}</span>
                                 </label>
-                                <div id={i} className={'main_do-block-none'}>
-                                    <div onClick={() => taskToBasket(task)} className={'main_delete-block'}>
+                                <div id={task.id} className={'main_do-block-none'}>
+                                    <div onClick={() => {
+                                        taskToBasket(task)
+                                        document.querySelector('.main_do-block')?.classList.remove('main_do-block')
+                                        document.querySelector('.main_task-m')?.classList.remove('main_task-m') 
+                                    }} className={'main_delete-block'}>
                                         <img src="/deleteIcon.svg" alt="deleteIcon"/>
                                         <p className={'main_delete-text'}>Переместить в корзину</p>
                                     </div>
                                     <div onClick={() => {
                                         setChangeTask(task)
-                                        setIsTaskWindowOpen(true)
                                     }} className={'main_change-block'}>
                                         <img src="/changeIcon.svg" alt="changeIcon"/>
                                         <p className={'main_change-text'}>Изменить</p>
@@ -187,15 +200,15 @@ const Main = ({activeIndex}) => {
                             </div>
                         ))
                             : activeIndex === 1 ?
-                                tasks.filter(task => task.taskDayNum === activeIndexN && task.isDone).map((task, i) => (
-                                    <div style={task.inBasket ? {display: "none"} : {}} key={i} className={`main_task main_task${i}`}>
-                                        <img onClick={() => openDeleteBlock(i)} className={'main_points-img'} src="/points.svg" alt="points"/>
+                                tasks.filter(task => task.taskDayNum === activeIndexN && task.isDone).map((task) => (
+                                    <div style={task.inBasket ? {display: "none"} : {}} key={task.id} className={`main_task main_task${task.id}`}>
+                                        <img onClick={() => openDeleteBlock(task)} className={'main_points-img'} src="/points.svg" alt="points"/>
                                         <label className={'main_task-label'}>
                                             <input checked={task.isDone} onChange={() => 1} className={'main_input'} type={"checkbox"}/>
                                             <span onClick={() => taskIsDoneChange(task)} className={'main_fake-inp'}></span>
                                             <span style={{fontSize: 16}} onClick={() => taskIsDoneChange(task)} className={task.isDone ? 'main_task-done' : ''}>{task.taskText ? task.taskText : 'Задача'} {task.startTime && '(' + task.startTime + (task.endTime ? '-' + task.endTime : '') + ')'}</span>
                                         </label>
-                                        <div id={i} className={'main_do-block-none'}>
+                                        <div id={task.id} className={'main_do-block-none'}>
                                             <div onClick={() => taskToBasket(task)} className={'main_delete-block'}>
                                                 <img src="/deleteIcon.svg" alt="deleteIcon"/>
                                                 <p className={'main_delete-text'}>Переместить в корзину</p>
@@ -211,25 +224,22 @@ const Main = ({activeIndex}) => {
                                     </div>
                                 ))
                             : activeIndex === 2 ?
-                                tasks.filter(task => task.taskDayNum === activeIndexN && task.inBasket).map((task, i) => (
-                                    <div key={i} className={`main_task main_task${i}`}>
-                                        <img onClick={() => openDeleteBlock(i)} className={'main_points-img'} src="/points.svg" alt="points"/>
+                                tasks.filter(task => task.taskDayNum === activeIndexN && task.inBasket).map((task) => (
+                                    <div key={task.id} className={`main_task main_task${task.id}`}>
+                                        <img onClick={() => openDeleteBlock(task)} className={'main_points-img'} src="/points.svg" alt="points"/>
                                         <label className={'main_task-label'}>
                                             <input checked={task.isDone} onChange={() => 1} className={'main_input'} type={"checkbox"}/>
                                             <span onClick={() => taskIsDoneChange(task)} className={'main_fake-inp'}></span>
                                             <span style={{fontSize: 16}} onClick={() => taskIsDoneChange(task)} className={task.isDone ? 'main_task-done' : ''}>{task.taskText ? task.taskText : 'Задача'} {task.startTime && '(' + task.startTime + (task.endTime ? '-' + task.endTime : '') + ')'}</span>
                                         </label>
-                                        <div id={i} className={'main_do-block-none'}>
-                                            <div onClick={() => taskToBasket(task)} className={'main_delete-block'}>
+                                        <div style={{paddingRight: 16}} id={task.id} className={'main_do-block-none'}>
+                                            <div onClick={() => taskDeleteForever(task)} className={'main_delete-block'}>
                                                 <img src="/deleteIcon.svg" alt="deleteIcon"/>
-                                                <p className={'main_delete-text'}>Переместить в корзину</p>
+                                                <p className={'main_delete-text'}>Удалить навсегда</p>
                                             </div>
-                                            <div onClick={() => {
-                                                setChangeTask(task)
-                                                setIsTaskWindowOpen(true)
-                                            }} className={'main_change-block'}>
+                                            <div onClick={() => taskOutBasket(task)} className={'main_change-block'}>
                                                 <img src="/changeIcon.svg" alt="changeIcon"/>
-                                                <p className={'main_change-text'}>Изменить</p>
+                                                <p className={'main_change-text'}>Вернуть к списку дел</p>
                                             </div>
                                         </div>
                                     </div>
