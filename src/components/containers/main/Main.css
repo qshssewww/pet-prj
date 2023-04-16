@@ -131,6 +131,9 @@
     border-radius: 4px;
     position: relative;
 }
+.main_delete-block, .main_change-block{
+    cursor: pointer;
+}
 .main_fake-inp::before{
     content: "";
     position: absolute;
@@ -178,7 +181,7 @@
     font-weight: 500;
 }
 .main_points-img{
-    padding-right: 0.75rem;
+    padding: .3rem .75rem 0 .3rem;
     cursor: pointer;
 }
 .main_do-block{

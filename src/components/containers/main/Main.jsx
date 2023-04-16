@@ -191,6 +191,7 @@ const Main = ({activeIndex}) => {
                                     </div>
                                     <div onClick={() => {
                                         setChangeTask(task)
+                                        setIsTaskWindowOpen(true)
                                     }} className={'main_change-block'}>
                                         <img src="/changeIcon.svg" alt="changeIcon"/>
                                         <p className={'main_change-text'}>Изменить</p>
