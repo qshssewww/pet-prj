@@ -172,9 +172,13 @@
 }
 .main_task-label{
     display: flex;
+    cursor: pointer;
     align-items: center;
     font-weight: 500;
-    margin-left: 0.75rem;
+}
+.main_points-img{
+    padding-right: 0.75rem;
+    cursor: pointer;
 }
 .main_do-block{
     z-index: 2;

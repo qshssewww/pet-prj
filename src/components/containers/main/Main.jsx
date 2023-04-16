@@ -17,9 +17,9 @@ const Main = ({activeIndex}) => {
     const [timeEnd, setTimeEnd] = useState('');
     const [textTask, setTextTask] = useState('')
     const [dayTask, setDayTask] = useState('')
-    const [dayTaskNum, setDayTaskNum] = useState(dateNow.getDay() - 1)
+    const [dayTaskNum, setDayTaskNum] = useState(dateNow.getDay() === 0 ? 6 : dateNow.getDay() - 1)
     //так как отсчет (о котором я говрил в фале Main.jsx) введется с воскресенья, мы вычитаем 1
-    const [activeIndexN, setActiveIndexN] = useState(dateNow.getDay() - 1)
+    const [activeIndexN, setActiveIndexN] = useState( dateNow.getDay() === 0 ? 6 : dateNow.getDay() - 1)
 
     useEffect(() => {
         const persistedValue = JSON.parse(window.localStorage.getItem('tasks'));
@@ -46,7 +46,6 @@ const Main = ({activeIndex}) => {
             setDayTask('Суббота')
         }
     }, [])
-
 
     const format = 'HH:mm';
 
